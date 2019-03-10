@@ -74,6 +74,10 @@ class ScopedEntityRepository implements ObjectRepository
             $qb->setFirstResult($offset);
         }
 
+        if($limit === 1) {
+            return $qb->getQuery()->getOneOrNullResult();
+        }
+
         return $qb->getQuery()->getResult();
     }
 
