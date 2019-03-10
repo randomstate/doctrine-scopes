@@ -75,6 +75,7 @@ return [
             'connection' => env('DB_CONNECTION', 'sqlite'),
             'namespaces' => [],
             'paths' => [
+                __DIR__ . '/Fakes',
             ],
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies' => [

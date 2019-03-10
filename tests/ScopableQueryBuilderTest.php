@@ -57,33 +57,4 @@ class ScopableQueryBuilderTest extends TestCase
 
         $this->assertEquals('SELECT u.id FROM RandomState\DoctrineScopes\Tests\Fakes\FakeEntity u', $builder->getQuery()->getDQL());
     }
-
-    /**
-     * @test
-     */
-    public function without_select()
-    {
-        $this->markTestIncomplete();
-
-
-        /** @var EntityManager $em */
-        $builder = new ScopableQueryBuilder($em = $this->app->make(EntityManager::class), $scopes = new ScopeCollection());
-
-        $scopes->add('scopeid', new FakeEntityInAccountScope(1));
-        $this->assertFalse($scopes->isEnabled('scopeid'));
-        $scopes->enable('scopeid');
-
-        $this->assertTrue($scopes->isEnabled('scopeid'));
-        $builder->select('u.id')->from(FakeEntity::class, 'u');
-
-        // entity persister
-        // create scopedquerybuilder
-        // select target alias and entity
-        // remove select statement
-        $builder->select('t0')
-            ->from(FakeEntity::class, 't0');
-        $parts = $builder->getDQLParts();
-        $query = $builder->getQuery();
-        dd($query->getSQL());
-    }
 }

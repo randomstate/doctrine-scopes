@@ -14,6 +14,7 @@ class DecoratableEntityManager implements EntityManagerInterface
      */
     protected $entityManager;
     protected $queryBuilderFactory;
+    protected $afterRepositoryInstantiated = [];
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -23,6 +24,13 @@ class DecoratableEntityManager implements EntityManagerInterface
     public function setQueryBuilderFactory(\Closure $factory)
     {
         $this->queryBuilderFactory = $factory;
+
+        return $this;
+    }
+
+    public function extendRepositoryFactory(\Closure $closure)
+    {
+        $this->afterRepositoryInstantiated[] = $closure;
 
         return $this;
     }
@@ -167,7 +175,18 @@ class DecoratableEntityManager implements EntityManagerInterface
 
     public function find($className, $id)
     {
-        return $this->entityManager->find($className, $id);
+        $idColumns = $this->getClassMetadata($className)->getIdentifierColumnNames();
+
+        $qb = $this->createQueryBuilder()->select('e')->from($className, 'e');
+        $isComposite = count($idColumns) > 1;
+
+        foreach($idColumns as $name) {
+            $qb->andWhere("e.$name = :{$name}_id")
+                ->setParameter("{$name}_id", $isComposite ? $idColumns[$name] : $id);
+        }
+
+        return $qb->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function persist($object)
@@ -207,7 +226,13 @@ class DecoratableEntityManager implements EntityManagerInterface
 
     public function getRepository($className)
     {
-        return $this->entityManager->getRepository($className);
+        $repo = $this->entityManager->getConfiguration()->getRepositoryFactory()->getRepository($this, $className);
+
+        foreach($this->afterRepositoryInstantiated as $extension) {
+            $repo = $extension($repo);
+        }
+
+        return $repo;
     }
 
     public function getClassMetadata($className)

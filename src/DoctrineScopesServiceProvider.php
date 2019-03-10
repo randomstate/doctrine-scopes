@@ -5,6 +5,7 @@ namespace RandomState\DoctrineScopes;
 
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Illuminate\Support\ServiceProvider;
 
 class DoctrineScopesServiceProvider extends ServiceProvider
@@ -19,6 +20,9 @@ class DoctrineScopesServiceProvider extends ServiceProvider
             return (new DecoratableEntityManager($em))
                 ->setQueryBuilderFactory(function() {
                     return $this->app->make(ScopableQueryBuilder::class);
+                })
+                ->extendRepositoryFactory(function(EntityRepository $repository) use($em) {
+                    return new ScopedEntityRepository($repository, $em);
                 })
                 ;
         });

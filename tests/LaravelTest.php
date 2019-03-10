@@ -11,6 +11,8 @@ use RandomState\DoctrineScopes\DecoratableEntityManager;
 use RandomState\DoctrineScopes\DoctrineScopesServiceProvider;
 use RandomState\DoctrineScopes\ScopableQueryBuilder;
 use RandomState\DoctrineScopes\ScopeCollection;
+use RandomState\DoctrineScopes\ScopedEntityRepository;
+use RandomState\DoctrineScopes\Tests\Fakes\FakeEntity;
 
 class LaravelTest extends TestCase
 {
@@ -30,6 +32,14 @@ class LaravelTest extends TestCase
     public function service_provider_correctly_wraps_entity_manager_and_query_builder()
     {
         $this->assertInstanceOf(DecoratableEntityManager::class, $this->entityManager);
+    }
+    
+    /**
+     * @test
+     */
+    public function repositories_are_scoped() 
+    {
+       $this->assertInstanceOf(ScopedEntityRepository::class, $this->entityManager->getRepository(FakeEntity::class));
     }
 
     /**
