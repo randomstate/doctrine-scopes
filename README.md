@@ -6,7 +6,9 @@ The 'best practice' for this is to filter all your queries at the global level.
 Laravel Eloquent provides it.
 Doctrine2 didn't.
 
-This package fixes that 👌.
+This package fixes that 👌
+
+**This gives you the full power of the query builder for scoping your queries, whereas the built-in Filters doesn't allow joins and expects you to write the SQL yourself.**
 
 ## Getting Started
 
