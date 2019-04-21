@@ -100,7 +100,7 @@ class DecoratableEntityManager implements EntityManagerInterface
 
     public function getReference($entityName, $id)
     {
-        return $this->getReference($entityName, $id);
+        return $this->entityManager->getReference($entityName, $id);
     }
 
     public function getPartialReference($entityName, $identifier)
