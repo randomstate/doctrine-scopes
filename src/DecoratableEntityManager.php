@@ -4,10 +4,11 @@
 namespace RandomState\DoctrineScopes;
 
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
-class DecoratableEntityManager implements EntityManagerInterface
+class DecoratableEntityManager extends EntityManager implements EntityManagerInterface
 {
     /**
      * @var EntityManagerInterface
@@ -19,6 +20,7 @@ class DecoratableEntityManager implements EntityManagerInterface
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        parent::__construct($entityManager->getConnection(), $entityManager->getConfiguration(), $entityManager->getEventManager());
     }
 
     public function setQueryBuilderFactory(\Closure $factory)
@@ -52,7 +54,7 @@ class DecoratableEntityManager implements EntityManagerInterface
 
     public function beginTransaction()
     {
-        return $this->entityManager->beginTransaction();
+        $this->entityManager->beginTransaction();
     }
 
     public function transactional($func)
@@ -62,12 +64,12 @@ class DecoratableEntityManager implements EntityManagerInterface
 
     public function commit()
     {
-        return $this->entityManager->commit();
+        $this->entityManager->commit();
     }
 
     public function rollback()
     {
-        return $this->entityManager->rollback();
+        $this->entityManager->rollback();
     }
 
     public function createQuery($dql = '')
@@ -173,7 +175,7 @@ class DecoratableEntityManager implements EntityManagerInterface
         return $this->entityManager->hasFilters();
     }
 
-    public function find($className, $id)
+    public function find($className, $id, $lockMode = null, $lockVersion = null)
     {
         $idColumns = $this->getClassMetadata($className)->getIdentifierColumnNames();
 
@@ -219,9 +221,9 @@ class DecoratableEntityManager implements EntityManagerInterface
         return $this->entityManager->refresh($object);
     }
 
-    public function flush()
+    public function flush($entity = null)
     {
-        return $this->entityManager->flush();
+        $this->entityManager->flush();
     }
 
     public function getRepository($className)
