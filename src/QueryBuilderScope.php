@@ -2,8 +2,7 @@
 
 namespace RandomState\DoctrineScopes;
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use RandomState\DoctrineScopes\ScopableQueryBuilder;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 interface QueryBuilderScope
 {

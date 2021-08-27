@@ -4,7 +4,7 @@
 namespace RandomState\DoctrineScopes\Tests\Fakes;
 
 
-use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use RandomState\DoctrineScopes\QueryBuilderScope;
 
