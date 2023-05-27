@@ -216,9 +216,9 @@ class DecoratableEntityManager extends EntityManager implements EntityManagerInt
         return $this->entityManager->detach($object);
     }
 
-    public function refresh($object)
+    public function refresh($object, ?int $lockMode = null)
     {
-        return $this->entityManager->refresh($object);
+        return $this->entityManager->refresh($object, $lockMode);
     }
 
     public function flush($entity = null)
